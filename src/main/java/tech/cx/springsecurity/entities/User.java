@@ -3,6 +3,8 @@ package tech.cx.springsecurity.entities;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +19,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tech.cx.springsecurity.controller.dto.LoginRequest;
 
 @Entity
 @Table(name = "tb_users")
@@ -42,4 +45,8 @@ public class User {
     inverseJoinColumns = @JoinColumn(name = "role_id")
   )
   private Set<Role> roles;
+
+  public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+    return passwordEncoder.matches(loginRequest.password(), this.password);   
+  }
 }
